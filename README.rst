@@ -118,6 +118,7 @@ Transport Comparison
          Disabled by default, but can be enabled by using the
          ``supports_fanout`` transport option.
 
+.. [#f3] AMQP Message priority support depends on broker implementation.
 
 Documentation
 -------------

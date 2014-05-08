@@ -184,3 +184,5 @@ Transport Comparison
 .. [#f2] Fanout supported via storing routing tables in SimpleDB.
          Disabled by default, but can be enabled by using the
          ``supports_fanout`` transport option.
+
+.. [#f3] AMQP Message priority support depends on broker implementation.

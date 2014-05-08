@@ -108,7 +108,8 @@ class Channel(virtual.Channel):
         else:
             msg = self.get_messages().find_and_modify(
                 query={'queue': queue},
-                sort={'_id': pymongo.ASCENDING},
+                sort=[('priority', pymongo.ASCENDING),
+                      ('_id', pymongo.ASCENDING)],
                 remove=True,
             )
 
@@ -125,7 +126,9 @@ class Channel(virtual.Channel):
 
     def _put(self, queue, message, **kwargs):
         self.get_messages().insert({'payload': dumps(message),
-                                    'queue': queue})
+                                    'queue': queue,
+                                    'priority': self._get_message_priority(message,
+                                                                           reverse=True)})
 
     def _purge(self, queue):
         size = self._size(queue)
@@ -222,7 +225,7 @@ class Channel(virtual.Channel):
     def _ensure_indexes(self):
         '''Ensure indexes on collections.'''
         self.get_messages().ensure_index(
-            [('queue', 1), ('_id', 1)], background=True,
+            [('queue', 1), ('priority', 1), ('_id', 1)], background=True,
         )
         self.get_broadcast().ensure_index([('queue', 1)])
         self.get_routing().ensure_index([('queue', 1), ('exchange', 1)])
